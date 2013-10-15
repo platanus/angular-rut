@@ -1,4 +1,4 @@
-angular.module('platanus.rut')
+angular.module('platanus.rut', [])
   .directive('rut', function() {
     return {
       require: 'ngModel',
