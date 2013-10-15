@@ -57,11 +57,6 @@ angular.module('platanus.rut')
 
           return format(value);
         });
-
-        elem.bind('blur', function() {
-          ngModel.$viewValue = format(ngModel.$modelValue);
-          ngModel.$render();
-       });
       }
-    }
+    };
   });
