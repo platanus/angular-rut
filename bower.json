@@ -1,8 +1,9 @@
 {
   "name": "angular-rut",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "authors": [
-    "Jaime Bunzli <jpbunzli@gmail.com>"
+    "Jaime Bunzli <jpbunzli@gmail.com>",
+    "Ignacio Baixas <ignacio@platan.us>"
   ],
   "description": "Chilean RUT module for angular",
   "license": "MIT",

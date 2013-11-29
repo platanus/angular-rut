@@ -1,3 +1,13 @@
+/**
+ * Chilean RUT module for angular
+ * @version v0.1.0 - 2013-11-29
+ * @link https://github.com/angular-platanus/rut
+ * @author Jaime Bunzli <jpbunzli@gmail.com>, Ignacio Baixas <ignacio@platan.us>
+ * @license MIT License, http://www.opensource.org/licenses/MIT
+ */
+
+(function(angular, undefined) {
+'use strict';
 // Rut cleaning, preserves numbers and Ks
 function cleanRut(_value) {
   return _value.replace(/[^0-9kK]+/g,'').toUpperCase();
@@ -83,3 +93,4 @@ angular.module('platanus.rut', [])
     }
   };
 });
+})(angular);
