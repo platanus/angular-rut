@@ -1,6 +1,6 @@
 {
   "name": "angular-rut",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "authors": [
     "Jaime Bunzli <jpbunzli@gmail.com>",
     "Ignacio Baixas <ignacio@platan.us>"
@@ -12,13 +12,14 @@
     "type": "git",
     "url": "git://github.com/angular-platanus/rut.git"
   },
-  "main": "./src/rut.js",
+  "main": "./dist/angular-rut.min.js",
   "ignore": [
     "**/.*",
     "Gruntfile.js",
     "karma.conf.js",
     "package.json",
     "test",
+    "src",
     ".travis.yml"
   ],
   "devDependencies": {
