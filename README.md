@@ -1,4 +1,5 @@
-# Platanus Angular RUT
+Platanus Angular RUT [![Build Status](https://secure.travis-ci.org/platanus/angular-rut.png)](https://travis-ci.org/platanus/angular-rut)
+===============
 
 A couple of angular components to handle chilean rut validation and formatting.
 
