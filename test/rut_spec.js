@@ -3,17 +3,20 @@
 describe('', function() {
 
   beforeEach(module('platanus.rut'));
+  beforeEach(module('platanus.validate'));
 
   describe('rutFormat filter', function() {
     it('should properly format a rut', inject(function($filter) {
+      expect($filter('formatRut')('1')).toEqual('1');
       expect($filter('formatRut')('101818k')).toEqual('101.818-K');
       expect($filter('formatRut')('101818l')).toEqual('10.181-8');
       expect($filter('formatRut')('1018189982')).toEqual('101.818.998-2');
     }));
 
     it('should return default value if no rut is given', inject(function($filter) {
-      expect($filter('formatRut')('','-')).toEqual('-');
-      expect($filter('formatRut')(null,'NA')).toEqual('NA');
+      expect($filter('formatRut')('', '-')).toEqual('-');
+      expect($filter('formatRut')(null, 'NA')).toEqual('NA');
+      expect($filter('formatRut')(200, 'NA')).toEqual('NA');
     }));
   });
 
@@ -32,6 +35,16 @@ describe('', function() {
 
     it('should pass with valid rut', function() {
       scope.form.rut.$setViewValue('99.999.999-9');
+      expect(scope.form.rut.$valid).toEqual(true);
+    });
+
+    it('should pass with empty rut', function() {
+      scope.form.rut.$setViewValue('');
+      expect(scope.form.rut.$valid).toEqual(true);
+    });
+
+    it('should pass with null rut', function() {
+      scope.form.rut.$setViewValue(null);
       expect(scope.form.rut.$valid).toEqual(true);
     });
 
@@ -70,6 +83,31 @@ describe('', function() {
     });
 
     // TODO: validate on blur/focus behavior.
+
+  });
+
+  describe('rut angular-validate validator', function() {
+
+    var element, scope;
+
+    beforeEach(inject(function($rootScope, $compile) {
+      element = angular.element('<form name="form"><input name="rut" type="text" ng-model="inputs.rut" validate="rut"/></form>');
+      scope = $rootScope;
+      scope.inputs = { rut: '' };
+      $compile(element)(scope);
+      scope.$digest();
+      element = element.find('input');
+    }));
+
+    it('should pass with valid rut', function() {
+      scope.form.rut.$setViewValue('99.999.999-9');
+      expect(scope.form.rut.$valid).toEqual(true);
+    });
+
+    it('should not pass with invalid rut', function() {
+      scope.form.rut.$setViewValue('1.018.177-6');
+      expect(scope.form.rut.$valid).toEqual(false);
+    });
 
   });
 

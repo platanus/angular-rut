@@ -13,7 +13,9 @@ module.exports = function(config) {
     files: [
 		// libraries
 		'bower_components/angular/angular.js',
-		'bower_components/angular-mocks/angular-mocks.js',
+    'bower_components/angular-inflector/dist/angular-inflector.js',
+    'bower_components/angular-validate/dist/angular-validate.js',
+    'bower_components/angular-mocks/angular-mocks.js',
 
 		// our app
         'src/*.js',
