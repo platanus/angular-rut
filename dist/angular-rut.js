@@ -1,6 +1,6 @@
 /**
  * Chilean RUT module for angular
- * @version v0.1.1 - 2013-11-29
+ * @version v0.2.0 - 2014-02-24
  * @link https://github.com/angular-platanus/rut
  * @author Jaime Bunzli <jpbunzli@gmail.com>, Ignacio Baixas <ignacio@platan.us>
  * @license MIT License, http://www.opensource.org/licenses/MIT
@@ -8,16 +8,17 @@
 
 (function(angular, undefined) {
 'use strict';
+
 // Rut cleaning, preserves numbers and Ks
 function cleanRut(_value) {
-  return _value.replace(/[^0-9kK]+/g,'').toUpperCase();
+  return typeof _value === 'string' ? _value.replace(/[^0-9kK]+/g,'').toUpperCase() : '';
 }
 
 // Rut formatting, ignores black values.
 function formatRut(_value, _default) {
-  if(!_value) return _default || ''; // Ignore blank values.
-
   _value = cleanRut(_value);
+
+  if(!_value) return _default;
   if(_value.length <= 1) return _value;
 
   var result = _value.slice(-4,-1) + '-' + _value.substr(_value.length-1);
@@ -27,6 +28,7 @@ function formatRut(_value, _default) {
 
 // Rut validation, returns true if value is empty or valid rut, expects a clean rut
 function validateRut(_value) {
+  if(typeof _value !== 'string') return false;
   var t = parseInt(_value.slice(0,-1), 10), m = 0, s = 1;
   while(t > 0) {
     s = (s + t%10 * (9 - m++%6)) % 11;
@@ -34,6 +36,11 @@ function validateRut(_value) {
   }
   var v = (s > 0) ? (s-1)+'' : 'K';
   return (v === _value.slice(-1));
+}
+
+// Cleans and validates a rut value.
+function cleanAndValidate(_value) {
+  return validateRut(cleanRut(_value));
 }
 
 angular.module('platanus.rut', [])
@@ -60,8 +67,12 @@ angular.module('platanus.rut', [])
     restrict: 'AC',
     link: function(_scope, _element, _attrs, _ctrl) {
       _ctrl.$parsers.unshift(function(_value) {
-        _value = cleanRut(_value);
-        _ctrl.$setValidity('rut', _value === '' || validateRut(_value));
+        var valid = true; // inocent until proven guilty
+        if(_value) {
+          _value = cleanRut(_value);
+          valid = validateRut(_value);
+        }
+        _ctrl.$setValidity('rut', valid);
         return _value;
       });
     }
@@ -92,5 +103,24 @@ angular.module('platanus.rut', [])
       });
     }
   };
-});
+})
+/**
+ * @name RutValidator
+ * @description angular-validate 'rut' validator
+ *
+ * Usage:
+ *
+ * ```html
+ * <input validate="rut, required"/>
+ * ```
+ *
+ * Requires the angular-validate lib [https://github.com/platanus/angular-validate]
+ *
+ */
+.constant('RutValidator', cleanAndValidate)
+/**
+ * @name validateRut
+ * @description Exposes the rut validation function as a angular constant.
+ */
+.constant('validateRut', cleanAndValidate);
 })(angular);
