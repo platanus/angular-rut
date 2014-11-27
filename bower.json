@@ -1,9 +1,10 @@
 {
   "name": "angular-rut",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "authors": [
     "Jaime Bunzli <jpbunzli@gmail.com>",
-    "Ignacio Baixas <ignacio@platan.us>"
+    "Ignacio Baixas <ignacio@platan.us>",
+    "René Morales <rene.morales.sanchez@gmail.com>"
   ],
   "description": "Chilean RUT module for angular",
   "license": "MIT",
@@ -23,8 +24,7 @@
     ".travis.yml"
   ],
   "devDependencies": {
-    "angular": "*",
-    "angular-validate": "*",
-    "angular-mocks": "*"
+    "angular": "~1.2.27",
+    "angular-mocks": "~1.2.27"
   }
 }

@@ -1,54 +1,78 @@
 Platanus Angular RUT [![Build Status](https://secure.travis-ci.org/platanus/angular-rut.png)](https://travis-ci.org/platanus/angular-rut)
 ===============
 
-A couple of angular components to handle chilean rut validation and formatting.
+An Angular module with several components to handle Chilean RUT validation, cleaning and formatting. It includes:
 
-## Installation:
+- **ngRut**: a directive to easily add validation, cleaning and formatting to any element with an associated ```ng-model``` value
+- **rut**: a filter to format valid RUTs with dots and dashes (11.111.111-1) in the view
+- **RutHelper**: a constant you can inject in your modules and exposes individual methods for validation, cleaning and formatting.
 
-**Optional** Use bower to retrieve package
+## Installation
+
+*Just use [Bower](http://bower.io/)*.
 
 ```
 bower install angular-rut --save
 ```
 
-Include angular module
+Then, inject it into your application:
 
 ```javascript
-angular.module('platanus.rut')
+angular.module('MyApp', ['platanus.rut']);
 ```
 
-## Usage
+## Directive
 
-### Filter
+Add the ```ng-rut``` directive to any element with an associated ```ng-model``` to automatically perform validation, cleaning and formatting.
 
 ```html
-<div ng-bind="rut | formatRut"></div>
+<input ng-rut type="text" ng-model="model.rut">
+```
+The directive does the following:
+
+- It **validates** whether the input is a valid RUT (by using ```$setValidity```),
+- passes a **clean** RUT (numbers and K only) to the model,
+- and **formats** the view by adding dots and dashes (11.111.111-1).
+
+#### Options
+
+You can use the ```rut-format``` attribute to define when should the view be formatted:
+
+- ```live```: Format as the RUT changes (e.g. as a user types into the input):
+```html
+<input ng-rut rut-format="live" type="text">
 ```
 
-The filter optionally accepts a default display value that is shown if value is _empty_ or _null_.
+- ```blur```: Format when the input is blurred:
+```html
+<input ng-rut rut-format="blur" type="text">
+```
+
+
+## Filter
+
+Use it just like any Angular filter. It takes a (presumably valid) RUT, cleans and formats it.
 
 ```html
-<div ng-bind="rut | formatRut: 'NA'"></div>
+{{ model.rut | rut }} 
 ```
 
-### Parser - Validator
+## RutHelper
 
-The `valid-rut` parser can be used as an attribute or class, it will also output a clean rut value (only numbers and Ks)
+Inject it as a dependency anywhere you like:
 
-```html
-<input type="text" valid-rut/>
+```javascript
+app.controller('RutCtrl', ['RutHelper', function(RutHelper){ ...
 ```
 
-### Control
+Then use it like so:
 
-The `rut-input` control can be used as an element, an attribute or a class, it will replace the element. It provides automatic validation and formatting.
-
-```html
-<rut-input name="rut" ng-model="model.rut"/>
+```javascript
+RutHelper.format('111111111'); // returns 11.111.111-1
 ```
 
-## TODO
+There are three methods available:
 
-* Expose `validateRut` utility function
-
-
+- ```RutHelper.clean(rut)``` strips every character except numbers and the letter K.
+- ```RutHelper.format(rut)``` cleans and formats the RUT number with dots and dashes (e.g 11.111.111-1).
+- ```RutHelper.validate(rut)``` returns a boolean indicating whether the given RUT is valid.
