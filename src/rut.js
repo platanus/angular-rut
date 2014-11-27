@@ -56,7 +56,7 @@ angular.module('platanus.rut', [])
     require: 'ngModel',
     restrict: 'AC',
     link: function(_scope, _element, _attrs, _ctrl) {
-      _ctrl.$parsers.unshift(function(_value) {
+      var _validator = function(_value) {
         var valid = true; // inocent until proven guilty
         if(_value) {
           _value = cleanRut(_value);
@@ -64,7 +64,10 @@ angular.module('platanus.rut', [])
         }
         _ctrl.$setValidity('rut', valid);
         return _value;
-      });
+      };
+
+      _ctrl.$parsers.unshift(_validator);
+      _ctrl.$formatters.unshift(_validator);
     }
   };
 })
