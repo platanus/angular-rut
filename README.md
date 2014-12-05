@@ -1,4 +1,4 @@
-Platanus Angular RUT [![Build Status](https://secure.travis-ci.org/platanus/angular-rut.png)](https://travis-ci.org/platanus/angular-rut)
+Platanus Angular RUT
 ===============
 
 An Angular module with several components to handle Chilean RUT validation, cleaning and formatting. It includes:
