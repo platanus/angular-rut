@@ -1,4 +1,3 @@
-
 // Rut cleaning, preserves numbers and Ks
 function cleanRut(_value) {
   return typeof _value === 'string' ? _value.replace(/[^0-9kK]+/g,'').toUpperCase() : '';
@@ -33,86 +32,71 @@ function cleanAndValidate(_value) {
   return validateRut(cleanRut(_value));
 }
 
+function addValidatorToNgModel(ngModel){
+  var validate = function(value) {
+    var valid = true; // inocent until proven guilty
+
+    if (value) {
+      value = cleanRut(value);
+      valid = validateRut(value);
+    }
+
+    ngModel.$setValidity('rut', valid);
+
+    return value;
+  };
+
+  ngModel.$parsers.unshift(validate);
+  ngModel.$formatters.unshift(validate);
+}
+
+function formatRutOnWatch(ngModel) {
+  ngModel.$viewChangeListeners.push(function(){
+    ngModel.$setViewValue(formatRut(ngModel.$viewValue));
+    ngModel.$render();
+  });
+}
+
+function formatRutOnBlur($element, ngModel) {
+  $element.on('blur', function(){
+    ngModel.$setViewValue(formatRut(ngModel.$viewValue));
+    ngModel.$render();
+  });
+}
+
 angular.module('platanus.rut', [])
-/**
- * @name formatRut
- * @description Rut formatting filter, adds dots and dashes.
- */
-.filter('formatRut', function() {
-  return formatRut;
-})
-/**
- * @name validRut
- * @description Rut validation parser, validates and clean a user input rut value.
- *
- * Usage:
- *
- * ```html
- * <input type="text" name="rut" valid-rut/>
- * ```
- */
-.directive('validRut', function() {
-  return {
-    require: 'ngModel',
-    restrict: 'AC',
-    link: function(_scope, _element, _attrs, _ctrl) {
-      var _validator = function(_value) {
-        var valid = true; // inocent until proven guilty
-        if(_value) {
-          _value = cleanRut(_value);
-          valid = validateRut(_value);
+
+  .directive('ngRut', function() {
+    return {
+      restrict: 'A',
+      require: 'ngModel',
+      link: function($scope, $element, $attrs, ngModel) {
+        if ( typeof $attrs.rutFormat == 'undefined' ) {
+          $attrs.rutFormat = 'live';
         }
-        _ctrl.$setValidity('rut', valid);
-        return _value;
-      };
 
-      _ctrl.$parsers.unshift(_validator);
-      _ctrl.$formatters.unshift(_validator);
-    }
-  };
-})
-/**
- * @name rutInput
- * @description Rut text input control, adds validation and formatting hooks.
- *
- * Usage:
- *
- * ```html
- * <rut-input name="rut"/>
- * ```
- */
-.directive('rutInput', function() {
-  return {
-    template: '<input type="text" valid-rut/>',
-    restrict: 'EAC',
-    replace: true,
-    link: function (_scope, _element) {
-      _element.on('blur', function() {
-        _element.val(formatRut(_element.val()));
-      });
+        addValidatorToNgModel(ngModel);
 
-      _element.on('focus', function() {
-        _element.val(cleanRut(_element.val()));
-      });
+        switch($attrs.rutFormat) {
+          case 'live':
+            formatRutOnWatch(ngModel);
+            break;
+          case 'blur':
+            formatRutOnBlur($element, ngModel);
+            break;
+        }  
+      }
     }
-  };
-})
-/**
- * @name RutValidator
- * @description angular-validate 'rut' validator
- *
- * Usage:
- *
- * ```html
- * <input validate="rut, required"/>
- * ```
- *
- * Requires the angular-validate lib [https://github.com/platanus/angular-validate]
- *
- */
-.constant('RutValidator', cleanAndValidate)
-/**
- * @name validateRut
- * @description Exposes the rut validation function as a angular constant.
- */
-.constant('validateRut', cleanAndValidate);
+  })
+
+  .filter('rut', function() {
+    return formatRut;
+  })
+
+  .constant('RutHelper', {
+    format: formatRut,
+    clean: cleanRut,
+    validate: function(value) {
+      return validateRut(cleanRut(value));
+    }
+  });
