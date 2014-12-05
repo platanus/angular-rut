@@ -13,9 +13,7 @@ module.exports = function(config) {
     files: [
 		// libraries
 		'bower_components/angular/angular.js',
-    'bower_components/angular-inflector/dist/angular-inflector.js',
-    'bower_components/angular-validate/dist/angular-validate.js',
-    'bower_components/angular-mocks/angular-mocks.js',
+        'bower_components/angular-mocks/angular-mocks.js',
 
 		// our app
         'src/*.js',
@@ -65,7 +63,7 @@ module.exports = function(config) {
     // - Safari (only Mac)
     // - PhantomJS
     // - IE (only Windows)
-    browsers: ['Chrome'],
+    browsers: ['PhantomJS'],
 
 
     // If browser does not capture in given timeout [ms], kill it

@@ -1,14 +1,13 @@
 /**
  * Chilean RUT module for angular
- * @version v0.2.0 - 2014-02-24
+ * @version v0.3.0 - 2014-12-05
  * @link https://github.com/angular-platanus/rut
- * @author Jaime Bunzli <jpbunzli@gmail.com>, Ignacio Baixas <ignacio@platan.us>
+ * @author Jaime Bunzli <jpbunzli@gmail.com>, Ignacio Baixas <ignacio@platan.us>, René Morales <rene.morales.sanchez@gmail.com>
  * @license MIT License, http://www.opensource.org/licenses/MIT
  */
 
 (function(angular, undefined) {
 'use strict';
-
 // Rut cleaning, preserves numbers and Ks
 function cleanRut(_value) {
   return typeof _value === 'string' ? _value.replace(/[^0-9kK]+/g,'').toUpperCase() : '';
@@ -43,84 +42,72 @@ function cleanAndValidate(_value) {
   return validateRut(cleanRut(_value));
 }
 
-angular.module('platanus.rut', [])
-/**
- * @name formatRut
- * @description Rut formatting filter, adds dots and dashes.
- */
-.filter('formatRut', function() {
-  return formatRut;
-})
-/**
- * @name validRut
- * @description Rut validation parser, validates and clean a user input rut value.
- *
- * Usage:
- *
- * ```html
- * <input type="text" name="rut" valid-rut/>
- * ```
- */
-.directive('validRut', function() {
-  return {
-    require: 'ngModel',
-    restrict: 'AC',
-    link: function(_scope, _element, _attrs, _ctrl) {
-      _ctrl.$parsers.unshift(function(_value) {
-        var valid = true; // inocent until proven guilty
-        if(_value) {
-          _value = cleanRut(_value);
-          valid = validateRut(_value);
-        }
-        _ctrl.$setValidity('rut', valid);
-        return _value;
-      });
-    }
-  };
-})
-/**
- * @name rutInput
- * @description Rut text input control, adds validation and formatting hooks.
- *
- * Usage:
- *
- * ```html
- * <rut-input name="rut"/>
- * ```
- */
-.directive('rutInput', function() {
-  return {
-    template: '<input type="text" valid-rut/>',
-    restrict: 'EAC',
-    replace: true,
-    link: function (_scope, _element) {
-      _element.on('blur', function() {
-        _element.val(formatRut(_element.val()));
-      });
+function addValidatorToNgModel(ngModel){
+  var validate = function(value) {
+    var valid = true; // inocent until proven guilty
 
-      _element.on('focus', function() {
-        _element.val(cleanRut(_element.val()));
-      });
+    if (value) {
+      value = cleanRut(value);
+      valid = validateRut(value);
     }
+
+    ngModel.$setValidity('rut', valid);
+
+    return value;
   };
-})
-/**
- * @name RutValidator
- * @description angular-validate 'rut' validator
- *
- * Usage:
- *
- * ```html
- * <input validate="rut, required"/>
- * ```
- *
- * Requires the angular-validate lib [https://github.com/platanus/angular-validate]
- *
- */
-.constant('RutValidator', cleanAndValidate)
-/**
- * @name validateRut
- * @description Exposes the rut validation function as a angular constant.
- */
-.constant('validateRut', cleanAndValidate);
+
+  ngModel.$parsers.unshift(validate);
+  ngModel.$formatters.unshift(validate);
+}
+
+function formatRutOnWatch(ngModel) {
+  ngModel.$viewChangeListeners.push(function(){
+    ngModel.$setViewValue(formatRut(ngModel.$viewValue));
+    ngModel.$render();
+  });
+}
+
+function formatRutOnBlur($element, ngModel) {
+  $element.on('blur', function(){
+    ngModel.$setViewValue(formatRut(ngModel.$viewValue));
+    ngModel.$render();
+  });
+}
+
+angular.module('platanus.rut', [])
+
+  .directive('ngRut', function() {
+    return {
+      restrict: 'A',
+      require: 'ngModel',
+      link: function($scope, $element, $attrs, ngModel) {
+        if ( typeof $attrs.rutFormat == 'undefined' ) {
+          $attrs.rutFormat = 'live';
+        }
+
+        addValidatorToNgModel(ngModel);
+
+        switch($attrs.rutFormat) {
+          case 'live':
+            formatRutOnWatch(ngModel);
+            break;
+          case 'blur':
+            formatRutOnBlur($element, ngModel);
+            break;
+        }  
+      }
+    }
+  })
+
+  .filter('rut', function() {
+    return formatRut;
+  })
+
+  .constant('RutHelper', {
+    format: formatRut,
+    clean: cleanRut,
+    validate: function(value) {
+      return validateRut(cleanRut(value));
+    }
+  });
 })(angular);
