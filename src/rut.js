@@ -70,22 +70,22 @@ angular.module('platanus.rut', [])
       restrict: 'A',
       require: 'ngModel',
       link: function($scope, $element, $attrs, ngModel) {
-        if ( typeof $attrs.rutFormat == 'undefined' ) {
+        if ( typeof $attrs.rutFormat === 'undefined' ) {
           $attrs.rutFormat = 'live';
         }
 
         addValidatorToNgModel(ngModel);
 
         switch($attrs.rutFormat) {
-          case 'live':
-            formatRutOnWatch(ngModel);
-            break;
-          case 'blur':
-            formatRutOnBlur($element, ngModel);
-            break;
+        case 'live':
+          formatRutOnWatch(ngModel);
+          break;
+        case 'blur':
+          formatRutOnBlur($element, ngModel);
+          break;
         }
       }
-    }
+    };
   })
 
   .filter('rut', function() {
