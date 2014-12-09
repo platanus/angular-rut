@@ -1,4 +1,6 @@
 {
+  "name": "angular-rut",
+  "version": "0.3.0",
   "engines": {
     "node": ">= 0.9"
   },
@@ -13,5 +15,8 @@
     "grunt-karma": "~0.9.0",
     "karma-jasmine": "~0.3.2",
     "karma-phantomjs-launcher": "~0.1.4"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/karma start --single-run --no-auto-watch --browsers PhantomJS"
   }
 }
