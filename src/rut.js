@@ -1,9 +1,7 @@
-// Rut cleaning, preserves numbers and Ks
 function cleanRut(_value) {
   return typeof _value === 'string' ? _value.replace(/[^0-9kK]+/g,'').toUpperCase() : '';
 }
 
-// Rut formatting, ignores black values.
 function formatRut(_value, _default) {
   _value = cleanRut(_value);
 
@@ -15,7 +13,6 @@ function formatRut(_value, _default) {
   return result;
 }
 
-// Rut validation, returns true if value is empty or valid rut, expects a clean rut
 function validateRut(_value) {
   if(typeof _value !== 'string') return false;
   var t = parseInt(_value.slice(0,-1), 10), m = 0, s = 1;
