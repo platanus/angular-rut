@@ -27,27 +27,26 @@ function validateRut(_value) {
   return (v === _value.slice(-1));
 }
 
-// Cleans and validates a rut value.
-function cleanAndValidate(_value) {
-  return validateRut(cleanRut(_value));
-}
-
 function addValidatorToNgModel(ngModel){
   var validate = function(value) {
-    var valid = true; // inocent until proven guilty
-
-    if (value) {
-      value = cleanRut(value);
-      valid = validateRut(value);
-    }
-
+    var valid = validateRut(value);
     ngModel.$setValidity('rut', valid);
-
-    return value;
+    return valid;
   };
 
-  ngModel.$parsers.unshift(validate);
-  ngModel.$formatters.unshift(validate);
+  var validateAndFilter = function(_value) {
+    _value = cleanRut(_value);
+    return validate(_value) ? _value : null;
+  };
+
+  var validateAndFormat = function(_value) {
+    _value = cleanRut(_value);
+    validate(_value);
+    return formatRut(_value);
+  };
+
+  ngModel.$parsers.unshift(validateAndFilter);
+  ngModel.$formatters.unshift(validateAndFormat);
 }
 
 function formatRutOnWatch(ngModel) {
@@ -84,7 +83,7 @@ angular.module('platanus.rut', [])
           case 'blur':
             formatRutOnBlur($element, ngModel);
             break;
-        }  
+        }
       }
     }
   })

@@ -11,12 +11,28 @@ describe('', function() {
       element = angular.element('<form name="form"><input ng-rut type="text" name="rut" ng-model="inputs.rut"></form>');
 
       scope = $rootScope.$new();
-      scope.inputs = { rut: '' };
       $compile(element)(scope);
       scope.$digest();
 
       element = element.find('input');
     }));
+
+    it('should make input display an empty string if model value is empty', function() {
+      scope.inputs = { rut: '' };
+      scope.$digest();
+      expect(element.val()).toEqual('');
+    });
+
+    it('should make input display a formated rut if model value changes', function() {
+      scope.inputs = { rut: '999999999' };
+      scope.$digest();
+      expect(element.val()).toEqual('99.999.999-9');
+    });
+
+    it('should set model value to null if view value is invalid', function() {
+      scope.form.rut.$setViewValue('1.018.177-6');
+      expect(scope.inputs.rut).toEqual(null);
+    });
 
     it('should pass with valid rut', function() {
       scope.form.rut.$setViewValue('99.999.999-9');
@@ -31,7 +47,7 @@ describe('', function() {
     it('should format the rut', function() {
       scope.form.rut.$setViewValue('999999999');
       scope.form.rut.$render();
-      expect(scope.form.rut.$viewValue).toEqual('99.999.999-9');  
+      expect(scope.form.rut.$viewValue).toEqual('99.999.999-9');
     });
 
     it('should pass a clean rut to the model', function() {
@@ -58,7 +74,7 @@ describe('', function() {
     it('should not format the rut in real time', function() {
       scope.form.rut.$setViewValue('999999999');
       scope.form.rut.$render();
-      expect(element.val()).toEqual('999999999'); 
+      expect(element.val()).toEqual('999999999');
     });
 
     it('should not format the rut in real time', function() {
@@ -67,7 +83,7 @@ describe('', function() {
 
       element.triggerHandler('blur');
 
-      expect(element.val()).toEqual('99.999.999-9'); 
+      expect(element.val()).toEqual('99.999.999-9');
     });
 
   });
