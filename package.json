@@ -1,15 +1,22 @@
 {
+  "name": "angular-rut",
+  "version": "0.3.0",
   "engines": {
     "node": ">= 0.9"
   },
   "dependencies": {},
   "devDependencies": {
-    "grunt-cli": ">= 0.1.7",
-    "grunt-contrib-concat": "*",
-    "grunt-contrib-jshint": "*",
-    "grunt-contrib-uglify": "*",
-    "grunt-bower": "*",
-    "grunt-bower-task": "*",
-    "grunt-karma": "latest"
+    "grunt-cli": "~0.1.13",
+    "grunt-contrib-concat": "~0.5.0",
+    "grunt-contrib-jshint": "~0.10.0",
+    "grunt-contrib-uglify": "~0.6.0",
+    "grunt-bower": "~0.16.0",
+    "grunt-bower-task": "0.4.0",
+    "grunt-karma": "~0.9.0",
+    "karma-jasmine": "~0.3.2",
+    "karma-phantomjs-launcher": "~0.1.4"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/karma start --single-run --no-auto-watch --browsers PhantomJS"
   }
 }
