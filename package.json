@@ -13,6 +13,7 @@
     "grunt-bower": "~0.16.0",
     "grunt-bower-task": "0.4.0",
     "grunt-karma": "~0.9.0",
+    "grunt-git": "^0.2.14",
     "karma-jasmine": "~0.3.2",
     "karma-phantomjs-launcher": "~0.1.4"
   },
