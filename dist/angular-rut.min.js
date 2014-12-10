@@ -1,6 +1,6 @@
 /**
  * Chilean RUT module for angular
- * @version v0.3.0 - 2014-12-09
+ * @version v1.0.0 - 2014-12-10
  * @link https://github.com/angular-platanus/rut
  * @author Jaime Bunzli <jpbunzli@gmail.com>, Ignacio Baixas <ignacio@platan.us>, René Morales <rene.morales.sanchez@gmail.com>
  * @license MIT License, http://www.opensource.org/licenses/MIT
