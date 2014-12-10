@@ -44,10 +44,16 @@ describe('', function() {
       expect(scope.form.rut.$valid).toEqual(false);
     });
 
-    it('should format the rut', function() {
+    it('should format the rut shown in the input', function() {
       scope.form.rut.$setViewValue('999999999');
       scope.form.rut.$render();
-      expect(scope.form.rut.$viewValue).toEqual('99.999.999-9');
+      expect(element.val()).toEqual('99.999.999-9');
+    });
+
+    it('should format an invalid rut shown in the input', function() {
+      scope.form.rut.$setViewValue('153363081');
+      scope.form.rut.$render();
+      expect(element.val()).toEqual('15.336.308-1');
     });
 
     it('should pass a clean rut to the model', function() {
