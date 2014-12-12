@@ -46,8 +46,10 @@ function addValidatorToNgModel(ngModel){
   ngModel.$formatters.unshift(validateAndFormat);
 }
 
-function formatRutOnWatch(ngModel) {
-  ngModel.$viewChangeListeners.push(function(){
+function formatRutOnWatch($scope, ngModel) {
+  $scope.$watch(function() {
+    return ngModel.$viewValue;
+  }, function() {
     ngModel.$setViewValue(formatRut(ngModel.$viewValue));
     ngModel.$render();
   });
@@ -75,7 +77,7 @@ angular.module('platanus.rut', [])
 
         switch($attrs.rutFormat) {
         case 'live':
-          formatRutOnWatch(ngModel);
+          formatRutOnWatch($scope, ngModel);
           break;
         case 'blur':
           formatRutOnBlur($element, ngModel);

@@ -2,6 +2,11 @@
 
 describe('', function() {
 
+  var setInputValue = function(element, value) {
+    element.val(value);
+    element.triggerHandler('change');
+  };
+
   beforeEach(module('platanus.rut'));
 
   describe('ngRut directive', function() {
@@ -15,6 +20,7 @@ describe('', function() {
       scope.$digest();
 
       element = element.find('input');
+      scope.form.rut.$setViewValue('');
     }));
 
     it('should make input display an empty string if model value is empty', function() {
@@ -30,34 +36,32 @@ describe('', function() {
     });
 
     it('should set model value to null if view value is invalid', function() {
-      scope.form.rut.$setViewValue('1.018.177-6');
+      setInputValue(element, '1.018.177-6');
       expect(scope.inputs.rut).toEqual(null);
     });
 
     it('should pass with valid rut', function() {
-      scope.form.rut.$setViewValue('99.999.999-9');
+      setInputValue(element, '99.999.999-9');
       expect(scope.form.rut.$valid).toEqual(true);
     });
 
     it('should not pass with invalid rut', function() {
-      scope.form.rut.$setViewValue('1.018.177-6');
+      setInputValue(element, '1.018.177-6');
       expect(scope.form.rut.$valid).toEqual(false);
     });
 
     it('should format the rut shown in the input', function() {
-      scope.form.rut.$setViewValue('999999999');
-      scope.form.rut.$render();
+      setInputValue(element, '999999999');
       expect(element.val()).toEqual('99.999.999-9');
     });
 
     it('should format an invalid rut shown in the input', function() {
-      scope.form.rut.$setViewValue('153363081');
-      scope.form.rut.$render();
+      setInputValue(element, '153363081');
       expect(element.val()).toEqual('15.336.308-1');
     });
 
     it('should pass a clean rut to the model', function() {
-      scope.form.rut.$setViewValue('11.111.111-1');
+      setInputValue(element, '11.111.111-1');
       expect(scope.inputs.rut).toEqual('111111111');
     });
 
@@ -78,14 +82,12 @@ describe('', function() {
     }));
 
     it('should not format the rut in real time', function() {
-      scope.form.rut.$setViewValue('999999999');
-      scope.form.rut.$render();
+      setInputValue(element, '999999999');
       expect(element.val()).toEqual('999999999');
     });
 
     it('should not format the rut in real time', function() {
-      scope.form.rut.$setViewValue('999999999');
-      scope.form.rut.$render();
+      setInputValue(element, '999999999');
 
       element.triggerHandler('blur');
 
