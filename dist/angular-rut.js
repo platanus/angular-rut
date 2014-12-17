@@ -1,6 +1,6 @@
 /**
  * Chilean RUT module for angular
- * @version v1.0.0 - 2014-12-10
+ * @version v1.0.1 - 2014-12-17
  * @link https://github.com/angular-platanus/rut
  * @author Jaime Bunzli <jpbunzli@gmail.com>, Ignacio Baixas <ignacio@platan.us>, René Morales <rene.morales.sanchez@gmail.com>
  * @license MIT License, http://www.opensource.org/licenses/MIT
@@ -56,8 +56,10 @@ function addValidatorToNgModel(ngModel){
   ngModel.$formatters.unshift(validateAndFormat);
 }
 
-function formatRutOnWatch(ngModel) {
-  ngModel.$viewChangeListeners.push(function(){
+function formatRutOnWatch($scope, ngModel) {
+  $scope.$watch(function() {
+    return ngModel.$viewValue;
+  }, function() {
     ngModel.$setViewValue(formatRut(ngModel.$viewValue));
     ngModel.$render();
   });
@@ -85,7 +87,7 @@ angular.module('platanus.rut', [])
 
         switch($attrs.rutFormat) {
         case 'live':
-          formatRutOnWatch(ngModel);
+          formatRutOnWatch($scope, ngModel);
           break;
         case 'blur':
           formatRutOnBlur($element, ngModel);
