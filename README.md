@@ -1,4 +1,4 @@
-Platanus Angular RUT [![Bower version][bower-badge]][bower] [![Build Status][travis-badge]][travis]
+angular-rut [![Bower version][bower-badge]][bower] [![Build Status][travis-badge]][travis]
 ===============
 
 [travis]: https://travis-ci.org/platanus/angular-rut
