@@ -1,5 +1,10 @@
-Platanus Angular RUT [![Build Status](https://travis-ci.org/platanus/angular-rut.svg?branch=master)](https://travis-ci.org/platanus/angular-rut)
+Platanus Angular RUT [![Bower version][bower-badge]][bower] [![Build Status][travis-badge]][travis]
 ===============
+
+[travis]: https://travis-ci.org/platanus/angular-rut
+[travis-badge]: https://travis-ci.org/platanus/angular-rut.svg?branch=master
+[bower]: http://badge.fury.io/bo/angular-rut
+[bower-badge]: https://badge.fury.io/bo/angular-rut.svg
 
 An Angular module with several components to handle Chilean RUT validation, cleaning and formatting. It includes:
 
