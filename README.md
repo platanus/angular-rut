@@ -81,3 +81,23 @@ There are three methods available:
 - ```RutHelper.clean(rut)``` strips every character except numbers and the letter K.
 - ```RutHelper.format(rut)``` cleans and formats the RUT number with dots and dashes (e.g 11.111.111-1).
 - ```RutHelper.validate(rut)``` returns a boolean indicating whether the given RUT is valid.
+
+## Contributing
+
+1. Fork it
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create new Pull Request
+
+## Credits
+
+Thank you [contributors](https://github.com/platanus/angular-rut/graphs/contributors)!
+
+<img src="http://platan.us/gravatar_with_text.png" alt="Platanus" width="250"/>
+
+angular-rut is maintained by [platanus](http://platan.us).
+
+## License
+
+Guides is © 2014 platanus, spa. It is free software and may be redistributed under the terms specified in the LICENSE file.
