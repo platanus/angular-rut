@@ -2,8 +2,12 @@ language: node_js
 sudo: false
 node_js:
   - 0.10
-
 before_script:
-  - npm install -g karma-cli
   - npm install -g bower
   - bower install
+addons:
+  sauce_connect: true
+env:
+  global:
+    - secure: T6QHZz6rXedDMXgp7TdGRRL+fL4JtTgofRw1WJEtusKU0x4P2+y8dPPXSmxx63BaM0/l1Gl8SmffCXy+CaxKqcVqUq3qQFv5kZZVbtpW1cOce/Fw2vSfO4WLf6yra7FyIIxwe1nc+JvEEBHVTKXuGAs0kHb2dTKdrS3tOc/tP4Q=
+    - secure: WAANH0DdkRMjx/ZDw+xX4XAV12q869roNCaw7wcvVtTrDm95eya39QcgIXEzmIPQyecoyFto8yvjauw8uKQGQpnQ4b90tjx1oI06s8SW+IR6RQWRdQep1FM81GFaFd93sGEmhqoPyNUtRCUGRoFWDT93uE1P3zMZppIGeBmE4Q4=
