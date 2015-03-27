@@ -55,6 +55,14 @@ function formatRutOnWatch($scope, ngModel) {
   });
 }
 
+function forceCaretPosition($scope, ngModel, $element) {
+  $scope.$watch(function() {
+    return ngModel.$viewValue;
+  }, function() {
+    setCaretPosition($element[0], viewValueLength(ngModel)+1);
+  });
+}
+
 function formatRutOnBlur($element, ngModel) {
   $element.on('blur', function(){
     ngModel.$setViewValue(formatRut(ngModel.$viewValue));
@@ -78,6 +86,7 @@ angular.module('platanus.rut', [])
         switch($attrs.rutFormat) {
         case 'live':
           formatRutOnWatch($scope, ngModel);
+          forceCaretPosition($scope, ngModel, $element);
           break;
         case 'blur':
           formatRutOnBlur($element, ngModel);
@@ -87,7 +96,7 @@ angular.module('platanus.rut', [])
     };
   })
 
-  .filter('rut', function() {
+  .filter('rut', function() {
     return formatRut;
   })
 
@@ -98,3 +107,35 @@ angular.module('platanus.rut', [])
       return validateRut(cleanRut(value));
     }
   });
+
+
+  /// private
+
+  function getCaretPosition(element) {
+    if ('selectionStart' in element) {
+      return element.selectionStart;
+    } else if (document.selection) {
+      element.focus();
+      var sel = document.selection.createRange();
+      var selLen = document.selection.createRange().text.length;
+      sel.moveStart('character', -element.value.length);
+      return sel.text.length - selLen;
+    }
+  }
+
+  function setCaretPosition(element, position) {
+    if (element.createTextRange) {
+      var range = element.createTextRange();
+      range.move('character', position);
+      range.select();
+    } else {
+      element.focus();
+      if (element.selectionStart !== undefined) {
+        element.setSelectionRange(position, position);
+      }
+    }
+  }
+
+  function viewValueLength(ngModel) {
+    return ngModel.$viewValue ? ngModel.$viewValue.length || 0 : 0;
+  }
