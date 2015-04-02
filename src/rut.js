@@ -2,6 +2,10 @@ function cleanRut(_value) {
   return typeof _value === 'string' ? _value.replace(/[^0-9kK]+/g,'').toUpperCase() : '';
 }
 
+function removeInvalidCharacters(_value) {
+  return typeof _value === 'string' ? _value.replace(/[^0-9kK.-]+/g,'') : '';
+}
+
 function formatRut(_value, _default) {
   _value = cleanRut(_value);
 
@@ -46,6 +50,15 @@ function addValidatorToNgModel(ngModel){
   ngModel.$formatters.unshift(validateAndFormat);
 }
 
+function removeInvalidCharactersOnWatch($scope, ngModel) {
+  $scope.$watch(function() {
+    return ngModel.$viewValue;
+  }, function() {
+    ngModel.$setViewValue(removeInvalidCharacters(ngModel.$viewValue));
+    ngModel.$render();
+  });
+}
+
 function formatRutOnWatch($scope, ngModel) {
   $scope.$watch(function() {
     return ngModel.$viewValue;
@@ -74,6 +87,8 @@ angular.module('platanus.rut', [])
         }
 
         addValidatorToNgModel(ngModel);
+
+        removeInvalidCharactersOnWatch($scope, ngModel);
 
         switch($attrs.rutFormat) {
         case 'live':
