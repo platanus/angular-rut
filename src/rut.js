@@ -61,6 +61,7 @@ function removeInvalidCharactersOnWatch($scope, $element, ngModel) {
     var caretPosition = $element[0].selectionStart-1;
     ngModel.$setViewValue(removeInvalidCharacters(ngModel.$viewValue));
     ngModel.$render();
+    $element.focus();
     $element[0].selectionStart = caretPosition;
     $element[0].selectionEnd = caretPosition;
   });
