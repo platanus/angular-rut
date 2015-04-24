@@ -111,7 +111,7 @@ angular.module('platanus.rut', [])
     };
   })
 
-  .filter('rut', function() {
+  .filter('rut', function() {
     return formatRut;
   })
 
