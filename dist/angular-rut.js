@@ -23,8 +23,9 @@ function formatRut(_value, _default) {
   return result;
 }
 
-function validateRut(_value) {
+function validateRut(_value, _required) {
   if(typeof _value !== 'string') return false;
+  if(_value.length === 0 && !_required) return true;
   var t = parseInt(_value.slice(0,-1), 10), m = 0, s = 1;
   while(t > 0) {
     s = (s + t%10 * (9 - m++%6)) % 11;
@@ -34,9 +35,9 @@ function validateRut(_value) {
   return (v === _value.slice(-1));
 }
 
-function addValidatorToNgModel(ngModel){
+function addValidatorToNgModel(ngModel, required){
   var validate = function(value) {
-    var valid = validateRut(value);
+    var valid = validateRut(value, required);
     ngModel.$setValidity('rut', valid);
     return valid;
   };
@@ -83,7 +84,9 @@ angular.module('platanus.rut', [])
           $attrs.rutFormat = 'live';
         }
 
-        addValidatorToNgModel(ngModel);
+        var required = $attrs.required ? true : false;
+
+        addValidatorToNgModel(ngModel, required);
 
         switch($attrs.rutFormat) {
         case 'live':
