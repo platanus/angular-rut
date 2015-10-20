@@ -11,7 +11,7 @@
   "homepage": "https://github.com/angular-platanus/rut",
   "repository": {
     "type": "git",
-    "url": "git://github.com/angular-platanus/rut.git"
+    "url": "git@github.com:fxckdead/angular-rut.git"
   },
   "main": "./dist/angular-rut.min.js",
   "ignore": [
