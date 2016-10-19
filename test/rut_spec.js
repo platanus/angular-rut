@@ -50,6 +50,11 @@ describe('', function() {
       expect(scope.form.rut.$valid).toEqual(false);
     });
 
+    it('should not pass with invalid rut with a "K" in the middle', function() {
+      setInputValue(element, '1.727.k17-2');
+      expect(scope.form.rut.$valid).toEqual(false);
+    });
+
     it('should format the rut shown in the input', function() {
       setInputValue(element, '999999999');
       expect(element.val()).toEqual('99.999.999-9');
