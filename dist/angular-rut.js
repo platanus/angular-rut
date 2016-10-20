@@ -1,6 +1,6 @@
 /**
  * Chilean RUT module for angular
- * @version v1.0.1 - 2014-12-17
+ * @version v1.0.2 - 2016-10-20
  * @link https://github.com/angular-platanus/rut
  * @author Jaime Bunzli <jpbunzli@gmail.com>, Ignacio Baixas <ignacio@platan.us>, René Morales <rene.morales.sanchez@gmail.com>
  * @license MIT License, http://www.opensource.org/licenses/MIT
@@ -25,7 +25,11 @@ function formatRut(_value, _default) {
 
 function validateRut(_value) {
   if(typeof _value !== 'string') return false;
-  var t = parseInt(_value.slice(0,-1), 10), m = 0, s = 1;
+  var t = _value.slice(0,-1), m = 0, s = 1;
+  if (/\D/.test(t)) {
+    return false;
+  }
+  t = parseInt(t, 10);
   while(t > 0) {
     s = (s + t%10 * (9 - m++%6)) % 11;
     t = Math.floor(t / 10);
