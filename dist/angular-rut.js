@@ -1,6 +1,6 @@
 /**
  * Chilean RUT module for angular
- * @version v1.0.1 - 2014-12-17
+ * @version v1.0.2 - 2016-12-16
  * @link https://github.com/angular-platanus/rut
  * @author Jaime Bunzli <jpbunzli@gmail.com>, Ignacio Baixas <ignacio@platan.us>, René Morales <rene.morales.sanchez@gmail.com>
  * @license MIT License, http://www.opensource.org/licenses/MIT
@@ -36,7 +36,7 @@ function validateRut(_value) {
 
 function addValidatorToNgModel(ngModel){
   var validate = function(value) {
-    var valid = validateRut(value);
+    var valid = (value.length > 0) ? validateRut(value) : true;
     ngModel.$setValidity('rut', valid);
     return valid;
   };
