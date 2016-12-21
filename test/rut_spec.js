@@ -50,6 +50,11 @@ describe('', function() {
       expect(scope.form.rut.$valid).toEqual(false);
     });
 
+    it('should pass with an empty value', function() {
+      setInputValue(element, '');
+      expect(scope.form.rut.$valid).toEqual(true);
+    });
+
     it('should format the rut shown in the input', function() {
       setInputValue(element, '999999999');
       expect(element.val()).toEqual('99.999.999-9');
