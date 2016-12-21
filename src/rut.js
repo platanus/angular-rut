@@ -26,7 +26,7 @@ function validateRut(_value) {
 
 function addValidatorToNgModel(ngModel){
   var validate = function(value) {
-    var valid = validateRut(value);
+    var valid = (value.length > 0) ? validateRut(value) : true;
     ngModel.$setValidity('rut', valid);
     return valid;
   };
