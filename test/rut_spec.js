@@ -99,6 +99,10 @@ describe('', function() {
       expect(element.val()).toEqual('99.999.999-9');
     });
 
+    it('should exclude invalid characters', function() {
+      setInputValue(element, '12s354.k-p0');
+      expect(element.val()).toEqual('12354.k-0');
+    });
   });
 
   describe('rut filter', function(){
