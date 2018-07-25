@@ -1,9 +1,8 @@
-// Rut cleaning, preserves numbers and Ks
 function cleanRut(_value) {
+  while(_value.indexOf('0') === 0) _value = _value.substr(1);
   return typeof _value === 'string' ? _value.replace(/[^0-9kK]+/g,'').toUpperCase() : '';
 }
 
-// Rut formatting, ignores black values.
 function formatRut(_value, _default) {
   _value = cleanRut(_value);
 
@@ -15,9 +14,9 @@ function formatRut(_value, _default) {
   return result;
 }
 
-// Rut validation, returns true if value is empty or valid rut, expects a clean rut
 function validateRut(_value) {
   if(typeof _value !== 'string') return false;
+  if(_value.indexOf('0') === 0) return false;
   var t = parseInt(_value.slice(0,-1), 10), m = 0, s = 1;
   while(t > 0) {
     s = (s + t%10 * (9 - m++%6)) % 11;
@@ -27,31 +26,32 @@ function validateRut(_value) {
   return (v === _value.slice(-1));
 }
 
-// Cleans and validates a rut value.
-function cleanAndValidate(_value) {
-  return validateRut(cleanRut(_value));
-}
-
 function addValidatorToNgModel(ngModel){
   var validate = function(value) {
-    var valid = true; // inocent until proven guilty
-
-    if (value) {
-      value = cleanRut(value);
-      valid = validateRut(value);
-    }
-
+    var valid = (value.length > 0) ? validateRut(value) : true;
     ngModel.$setValidity('rut', valid);
-
-    return value;
+    return valid;
   };
 
-  ngModel.$parsers.unshift(validate);
-  ngModel.$formatters.unshift(validate);
+  var validateAndFilter = function(_value) {
+    _value = cleanRut(_value);
+    return validate(_value) ? _value : null;
+  };
+
+  var validateAndFormat = function(_value) {
+    _value = cleanRut(_value);
+    validate(_value);
+    return formatRut(_value);
+  };
+
+  ngModel.$parsers.unshift(validateAndFilter);
+  ngModel.$formatters.unshift(validateAndFormat);
 }
 
-function formatRutOnWatch(ngModel) {
-  ngModel.$viewChangeListeners.push(function(){
+function formatRutOnWatch($scope, ngModel) {
+  $scope.$watch(function() {
+    return ngModel.$viewValue;
+  }, function() {
     ngModel.$setViewValue(formatRut(ngModel.$viewValue));
     ngModel.$render();
   });
@@ -71,22 +71,22 @@ angular.module('platanus.rut', [])
       restrict: 'A',
       require: 'ngModel',
       link: function($scope, $element, $attrs, ngModel) {
-        if ( typeof $attrs.rutFormat == 'undefined' ) {
+        if ( typeof $attrs.rutFormat === 'undefined' ) {
           $attrs.rutFormat = 'live';
         }
 
         addValidatorToNgModel(ngModel);
 
         switch($attrs.rutFormat) {
-          case 'live':
-            formatRutOnWatch(ngModel);
-            break;
-          case 'blur':
-            formatRutOnBlur($element, ngModel);
-            break;
-        }  
+        case 'live':
+          formatRutOnWatch($scope, ngModel);
+          break;
+        case 'blur':
+          formatRutOnBlur($element, ngModel);
+          break;
+        }
       }
-    }
+    };
   })
 
   .filter('rut', function() {

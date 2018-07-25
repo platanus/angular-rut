@@ -2,6 +2,11 @@
 
 describe('', function() {
 
+  var setInputValue = function(element, value) {
+    element.val(value);
+    element.triggerHandler('change');
+  };
+
   beforeEach(module('platanus.rut'));
 
   describe('ngRut directive', function() {
@@ -11,31 +16,57 @@ describe('', function() {
       element = angular.element('<form name="form"><input ng-rut type="text" name="rut" ng-model="inputs.rut"></form>');
 
       scope = $rootScope.$new();
-      scope.inputs = { rut: '' };
       $compile(element)(scope);
       scope.$digest();
 
       element = element.find('input');
+      scope.form.rut.$setViewValue('');
     }));
 
+    it('should make input display an empty string if model value is empty', function() {
+      scope.inputs = { rut: '' };
+      scope.$digest();
+      expect(element.val()).toEqual('');
+    });
+
+    it('should make input display a formated rut if model value changes', function() {
+      scope.inputs = { rut: '999999999' };
+      scope.$digest();
+      expect(element.val()).toEqual('99.999.999-9');
+    });
+
+    it('should set model value to null if view value is invalid', function() {
+      setInputValue(element, '1.018.177-6');
+      expect(scope.inputs.rut).toEqual(null);
+    });
+
     it('should pass with valid rut', function() {
-      scope.form.rut.$setViewValue('99.999.999-9');
+      setInputValue(element, '99.999.999-9');
       expect(scope.form.rut.$valid).toEqual(true);
     });
 
     it('should not pass with invalid rut', function() {
-      scope.form.rut.$setViewValue('1.018.177-6');
+      setInputValue(element, '1.018.177-6');
       expect(scope.form.rut.$valid).toEqual(false);
     });
 
-    it('should format the rut', function() {
-      scope.form.rut.$setViewValue('999999999');
-      scope.form.rut.$render();
-      expect(scope.form.rut.$viewValue).toEqual('99.999.999-9');  
+    it('should pass with an empty value', function() {
+      setInputValue(element, '');
+      expect(scope.form.rut.$valid).toEqual(true);
+    });
+
+    it('should format the rut shown in the input', function() {
+      setInputValue(element, '999999999');
+      expect(element.val()).toEqual('99.999.999-9');
+    });
+
+    it('should format an invalid rut shown in the input', function() {
+      setInputValue(element, '153363081');
+      expect(element.val()).toEqual('15.336.308-1');
     });
 
     it('should pass a clean rut to the model', function() {
-      scope.form.rut.$setViewValue('11.111.111-1');
+      setInputValue(element, '11.111.111-1');
       expect(scope.inputs.rut).toEqual('111111111');
     });
 
@@ -56,18 +87,16 @@ describe('', function() {
     }));
 
     it('should not format the rut in real time', function() {
-      scope.form.rut.$setViewValue('999999999');
-      scope.form.rut.$render();
-      expect(element.val()).toEqual('999999999'); 
+      setInputValue(element, '999999999');
+      expect(element.val()).toEqual('999999999');
     });
 
     it('should not format the rut in real time', function() {
-      scope.form.rut.$setViewValue('999999999');
-      scope.form.rut.$render();
+      setInputValue(element, '999999999');
 
       element.triggerHandler('blur');
 
-      expect(element.val()).toEqual('99.999.999-9'); 
+      expect(element.val()).toEqual('99.999.999-9');
     });
 
   });

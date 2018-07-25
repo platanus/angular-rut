@@ -75,6 +75,36 @@ module.exports = function(grunt) {
       dev: {
         autoWatch: true
       }
+    },
+    gitcommit: {
+      bump: {
+        options: {
+          message: "<%= pkg.version %>",
+          noStatus: true
+        },
+        files: {
+          src: [
+            'bower.json',
+            'dist/**/*'
+            ]
+        }
+      }
+    },
+    gittag: {
+      bump: {
+        options: {
+          tag: "v<%= pkg.version %>",
+          noStatus: true
+        }
+      }
+    },
+    gitpush: {
+      bump: {
+        options: {
+          branch: 'master',
+          tags: true
+        }
+      }
     }
   });
 
@@ -93,6 +123,12 @@ module.exports = function(grunt) {
   // Test task
   grunt.registerTask('test', ['karma:build']);
 
+  // Release Task
+  grunt.registerTask('release', ['bump', 'build']);
+
+  // Publish Task
+  grunt.registerTask('publish', ['gitcommit:bump', 'gittag:bump', 'gitpush:bump']);
+
   // Provides the "bump" task.
   grunt.registerTask('bump', 'Increment version number', function() {
     var versionType = grunt.option('type');
@@ -104,14 +140,13 @@ module.exports = function(grunt) {
       while(++idx < parts.length) { parts[idx] = 0; }
       return parts.join('.');
     }
-    var version;
-    function updateFile(file) {
-      var json = grunt.file.readJSON(file);
-      version = json.version = bumpVersion(json.version, versionType || 'patch');
-      grunt.file.write(file, JSON.stringify(json, null, '  '));
-    }
-    // updateFile('package.json');
-    updateFile('bower.json');
+
+    var version = grunt.config.data.pkg.version;
+    version = bumpVersion(version, versionType || 'patch');
+
+    grunt.config.data.pkg.version = version;
+    grunt.file.write('bower.json', JSON.stringify(grunt.config.data.pkg, null, '  '));
+
     grunt.log.ok('Version bumped to ' + version);
   });
 
