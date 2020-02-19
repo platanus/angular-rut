@@ -12,6 +12,12 @@ An Angular module with several components to handle Chilean RUT validation, clea
 - **rut**: a filter to format valid RUTs with dots and dashes (11.111.111-1) in the view
 - **RutHelper**: a constant you can inject in your modules and exposes individual methods for validation, cleaning and formatting.
 
+## angular-rut is no longer maintained.
+
+- We will leave the Issues open as a discussion forum only.
+- We do not guarantee a response from us in the Issues.
+- We are no longer accepting pull requests.
+
 ## Installation
 
 *Just use [Bower](http://bower.io/)*.
